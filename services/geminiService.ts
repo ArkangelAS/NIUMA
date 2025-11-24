@@ -1,8 +1,15 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { RoastResult } from "../types";
 
+// Safety check for API Key. 
+// On GitHub Pages static hosting, process.env.API_KEY might be empty unless injected during build.
+// The app will fallback to mock data if no key is present.
 const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+
+let ai: GoogleGenAI | null = null;
+if (apiKey) {
+  ai = new GoogleGenAI({ apiKey });
+}
 
 const MODEL_NAME = 'gemini-2.5-flash';
 
@@ -25,6 +32,12 @@ const SYSTEM_INSTRUCTION = `
 `;
 
 export const generateRoast = async (bossType: string, behavior: string): Promise<RoastResult> => {
+  // If no API key is configured or initialized, use fallback immediately
+  if (!ai) {
+    console.warn("No API Key found. Using fallback data.");
+    return getFallbackData(bossType);
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: MODEL_NAME,
@@ -61,13 +74,22 @@ export const generateRoast = async (bossType: string, behavior: string): Promise
     return result as RoastResult;
   } catch (error) {
     console.error("Error generating roast:", error);
-    // Fallback data
-    return {
-      totalScore: 99,
-      scores: { impulse: 30, workload: 30, drain: 29, humor: 10 },
-      roastContent: "服务器也被你的老板整崩溃了，这种级别的离谱，建议直接申请吉尼斯世界纪录。",
-      analysis: "连AI都无法计算的混沌熵增",
-      summaryTag: "天选打工人"
-    };
+    return getFallbackData(bossType);
   }
+};
+
+// Fallback data generator for when API fails or is missing
+const getFallbackData = (bossType: string): RoastResult => {
+  return {
+    totalScore: Math.floor(Math.random() * 20) + 80, // Random high score 80-99
+    scores: { 
+      impulse: 28, 
+      workload: 25, 
+      drain: 29, 
+      humor: 8 
+    },
+    roastContent: `恭喜你，遇到了传说中的"${bossType}"完全体。这种情况建议不要试图理解，因为理解了你也就疯了。工资是精神损失费，但这笔钱显然不够看病。`,
+    analysis: "无法被碳基生物理解的熵增行为",
+    summaryTag: "天选纯血牛马"
+  };
 };

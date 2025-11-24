@@ -2,32 +2,60 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>对牛谈马 - 职场牛马指数检测仪</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0f172a" />
+    <title>对牛谈马 - 职场牛马指数</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Using CDN for Tailwind for simplicity in this specific workflow, 
+         but ensuring it works with the built React app -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       body {
         font-family: 'Noto Sans SC', sans-serif;
         background-color: #f8fafc;
+        overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
       }
-      ::-webkit-scrollbar {
-        width: 8px;
+      
+      /* Mobile Optimizations */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
       }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
-      ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
+      
+      @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(50px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+
+      @keyframes pulse-slow {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+      }
+
+      .animate-fade-in-up {
+        animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      
+      .animate-slide-in {
+        animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* Glassmorphism utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
       }
     </style>
-    <!-- Tailwind CSS is handled via CDN for simplicity in this setup, 
-         though in a full build you might import it via CSS. 
-         Keeping CDN for compatibility with current styles. -->
-    <script src="https://cdn.tailwindcss.com"></script>
   <script type="importmap">
 {
   "imports": {
