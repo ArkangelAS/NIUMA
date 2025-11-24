@@ -1,10 +1,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { RoastResult } from "../types";
 
-// Safety check for API Key. 
-// On GitHub Pages static hosting, process.env.API_KEY might be empty unless injected during build.
-// The app will fallback to mock data if no key is present.
-const apiKey = process.env.API_KEY || '';
+// Get API Key exclusively from process.env.API_KEY.
+// This is injected via vite.config.ts define or environment variables.
+const apiKey = process.env.API_KEY;
 
 let ai: GoogleGenAI | null = null;
 if (apiKey) {
